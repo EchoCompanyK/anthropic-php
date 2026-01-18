@@ -7,7 +7,9 @@ test('from first chunk', function () {
 
     expect($result)
         ->inputTokens->toBe(10)
-        ->outputTokens->toBe(1);
+        ->outputTokens->toBe(1)
+        ->cacheCreationInputTokens->toBe(2)
+        ->cacheReadInputTokens->toBe(3);
 });
 
 test('from content chunk', function () {
@@ -15,7 +17,9 @@ test('from content chunk', function () {
 
     expect($result)
         ->inputTokens->toBeNull()
-        ->outputTokens->toBeNull();
+        ->outputTokens->toBeNull()
+        ->cacheCreationInputTokens->toBeNull()
+        ->cacheReadInputTokens->toBeNull();
 });
 
 test('from last chunk', function () {
@@ -23,7 +27,9 @@ test('from last chunk', function () {
 
     expect($result)
         ->inputTokens->toBeNull()
-        ->outputTokens->toBe(15);
+        ->outputTokens->toBe(15)
+        ->cacheCreationInputTokens->toBe(4)
+        ->cacheReadInputTokens->toBe(5);
 });
 
 test('to array from first chunk', function () {
@@ -40,6 +46,8 @@ test('to array for a content chunk', function () {
         ->toBe([
             'input_tokens' => null,
             'output_tokens' => null,
+            'cache_creation_input_tokens' => null,
+            'cache_read_input_tokens' => null,
         ]);
 });
 
@@ -50,5 +58,7 @@ test('to array from last chunk', function () {
         ->toBe([
             'input_tokens' => null,
             'output_tokens' => messagesCompletionStreamLastChunk()['usage']['output_tokens'],
+            'cache_creation_input_tokens' => messagesCompletionStreamLastChunk()['usage']['cache_creation_input_tokens'],
+            'cache_read_input_tokens' => messagesCompletionStreamLastChunk()['usage']['cache_read_input_tokens'],
         ]);
 });

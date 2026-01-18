@@ -99,6 +99,8 @@ function messagesCompletionStreamFirstChunk(): array
             'usage' => [
                 'input_tokens' => 10,
                 'output_tokens' => 1,
+                'cache_creation_input_tokens' => 2,
+                'cache_read_input_tokens' => 3,
             ],
         ],
     ];
@@ -126,6 +128,8 @@ function messagesCompletionStreamLastChunk(): array
         ],
         'usage' => [
             'output_tokens' => 15,
+            'cache_creation_input_tokens' => 4,
+            'cache_read_input_tokens' => 5,
         ],
     ];
 }

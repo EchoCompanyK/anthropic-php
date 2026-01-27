@@ -2,6 +2,14 @@
 
 All notable changes to `anthropic-php` will be documented in this file.
 
+## 1.1.1 - 2026-01-27
+
+### What's Changed
+
+* Add support for cache creation ephemeral tokens (5m and 1h) in usage responses
+
+**Full Changelog**: https://github.com/mozex/anthropic-php/compare/1.1.0...1.1.1
+
 ## 1.1.0 - 2024-12-21
 
 ### What's Changed

@@ -51,6 +51,34 @@ function messagesCompletionWithCache(): array
     ];
 }
 
+function messagesCompletionWithCacheCreation(): array
+{
+    return [
+        'id' => 'msg_019hiOHAEXQwq1PTeETNEBWe',
+        'type' => 'message',
+        'role' => 'assistant',
+        'model' => 'claude-3-opus-20240229',
+        'stop_sequence' => null,
+        'usage' => [
+            'input_tokens' => 10,
+            'output_tokens' => 20,
+            'cache_creation_input_tokens' => 30,
+            'cache_read_input_tokens' => 40,
+            'cache_creation' => [
+                'ephemeral_5m_input_tokens' => 456,
+                'ephemeral_1h_input_tokens' => 100,
+            ],
+        ],
+        'content' => [
+            [
+                'type' => 'text',
+                'text' => "Hello! I'm Claude, an AI assistant. How can I help you today?",
+            ],
+        ],
+        'stop_reason' => 'end_turn',
+    ];
+}
+
 /**
  * @return array<string, mixed>
  */
@@ -101,6 +129,10 @@ function messagesCompletionStreamFirstChunk(): array
                 'output_tokens' => 1,
                 'cache_creation_input_tokens' => 2,
                 'cache_read_input_tokens' => 3,
+                'cache_creation' => [
+                    'ephemeral_5m_input_tokens' => 50,
+                    'ephemeral_1h_input_tokens' => 25,
+                ],
             ],
         ],
     ];
@@ -130,6 +162,10 @@ function messagesCompletionStreamLastChunk(): array
             'output_tokens' => 15,
             'cache_creation_input_tokens' => 4,
             'cache_read_input_tokens' => 5,
+            'cache_creation' => [
+                'ephemeral_5m_input_tokens' => 60,
+                'ephemeral_1h_input_tokens' => 30,
+            ],
         ],
     ];
 }

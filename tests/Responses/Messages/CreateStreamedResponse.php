@@ -78,6 +78,99 @@ test('from content chunk', function () {
         ->usage->inputTokens->toBeNull();
 });
 
+test('from thinking content block start chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamThinkingContentBlockStartChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_start')
+        ->index->toBe(0)
+        ->content_block_start->toBeInstanceOf(CreateStreamedResponseContentBlockStart::class)
+        ->content_block_start->type->toBe('thinking')
+        ->content_block_start->thinking->toBe('');
+});
+
+test('from thinking delta chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamThinkingDeltaChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_delta')
+        ->index->toBe(0)
+        ->delta->toBeInstanceOf(CreateStreamedResponseDelta::class)
+        ->delta->type->toBe('thinking_delta')
+        ->delta->thinking->toBe('I need to find the GCD using the Euclidean algorithm.');
+});
+
+test('from signature delta chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamSignatureDeltaChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_delta')
+        ->index->toBe(0)
+        ->delta->toBeInstanceOf(CreateStreamedResponseDelta::class)
+        ->delta->type->toBe('signature_delta')
+        ->delta->signature->toBe('EqQBCgIYAhIM1gbcDa9GJwZA2b3h');
+});
+
+test('from server tool use content block start chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamServerToolUseContentBlockStartChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_start')
+        ->index->toBe(1)
+        ->content_block_start->toBeInstanceOf(CreateStreamedResponseContentBlockStart::class)
+        ->content_block_start->type->toBe('server_tool_use')
+        ->content_block_start->id->toBe('srvtoolu_01WYG3ziw53XMcoyKL4XcZmE')
+        ->content_block_start->name->toBe('web_search');
+});
+
+test('from web search result content block start chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamWebSearchResultContentBlockStartChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_start')
+        ->index->toBe(2)
+        ->content_block_start->toBeInstanceOf(CreateStreamedResponseContentBlockStart::class)
+        ->content_block_start->type->toBe('web_search_tool_result')
+        ->content_block_start->tool_use_id->toBe('srvtoolu_01WYG3ziw53XMcoyKL4XcZmE')
+        ->content_block_start->content->toBeArray()->toHaveCount(1);
+});
+
+test('from citations delta chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamCitationsDeltaChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_delta')
+        ->index->toBe(0)
+        ->delta->toBeInstanceOf(CreateStreamedResponseDelta::class)
+        ->delta->type->toBe('citations_delta')
+        ->delta->citation->toBeArray();
+
+    expect($completion->delta->citation)
+        ->toBe([
+            'type' => 'char_location',
+            'cited_text' => 'The grass is green.',
+            'document_index' => 0,
+            'document_title' => 'Example Document',
+            'start_char_index' => 0,
+            'end_char_index' => 20,
+        ]);
+});
+
+test('from content block stop chunk', function () {
+    $completion = CreateStreamedResponse::from(messagesCompletionStreamContentBlockStopChunk());
+
+    expect($completion)
+        ->toBeInstanceOf(CreateStreamedResponse::class)
+        ->type->toBe('content_block_stop')
+        ->index->toBe(0);
+});
+
 test('from last chunk', function () {
     $completion = CreateStreamedResponse::from(messagesCompletionStreamLastChunk());
 
@@ -122,7 +215,7 @@ test('to array', function () {
                 'type' => 'message',
                 'role' => 'assistant',
                 'content' => [],
-                'model' => 'claude-3-haiku-20240307',
+                'model' => 'claude-haiku-4-5',
                 'stop_reason' => null,
                 'stop_sequence' => null,
             ],
@@ -132,10 +225,13 @@ test('to array', function () {
                 'text' => null,
                 'name' => null,
                 'input' => null,
+                'thinking' => null,
             ],
             'usage' => [
                 'input_tokens' => 10,
                 'output_tokens' => 1,
+                'cache_creation_input_tokens' => null,
+                'cache_read_input_tokens' => null,
             ],
         ]);
 });

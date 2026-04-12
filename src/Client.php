@@ -6,8 +6,10 @@ namespace Anthropic;
 
 use Anthropic\Contracts\ClientContract;
 use Anthropic\Contracts\TransporterContract;
+use Anthropic\Resources\Batches;
 use Anthropic\Resources\Completions;
 use Anthropic\Resources\Messages;
+use Anthropic\Resources\Models;
 
 final class Client implements ClientContract
 {
@@ -38,5 +40,25 @@ final class Client implements ClientContract
     public function messages(): Messages
     {
         return new Messages($this->transporter);
+    }
+
+    /**
+     * List and retrieve information about available models.
+     *
+     * @see https://docs.anthropic.com/en/api/models
+     */
+    public function models(): Models
+    {
+        return new Models($this->transporter);
+    }
+
+    /**
+     * Create, retrieve, list, cancel, and delete Message Batches.
+     *
+     * @see https://docs.anthropic.com/en/api/creating-message-batches
+     */
+    public function batches(): Batches
+    {
+        return new Batches($this->transporter);
     }
 }

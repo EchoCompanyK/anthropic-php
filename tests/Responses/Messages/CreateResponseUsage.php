@@ -2,6 +2,7 @@
 
 use Anthropic\Responses\Messages\CreateResponseUsage;
 use Anthropic\Responses\Messages\CreateResponseUsageCacheCreation;
+use Anthropic\Responses\Messages\CreateResponseUsageIteration;
 use Anthropic\Responses\Messages\CreateResponseUsageServerToolUse;
 
 test('from', function () {
@@ -46,6 +47,26 @@ test('from with extended usage', function () {
         ->serverToolUse->webSearchRequests->toBe(3);
 });
 
+test('from with compaction iterations', function () {
+    $result = CreateResponseUsage::from(messagesCompletionWithCompactionUsage()['usage']);
+
+    expect($result)
+        ->inputTokens->toBe(23000)
+        ->outputTokens->toBe(1000)
+        ->iterations->toBeArray()->toHaveCount(2)
+        ->iterations->each->toBeInstanceOf(CreateResponseUsageIteration::class);
+
+    expect($result->iterations[0])
+        ->type->toBe('compaction')
+        ->inputTokens->toBe(180000)
+        ->outputTokens->toBe(3500);
+
+    expect($result->iterations[1])
+        ->type->toBe('message')
+        ->inputTokens->toBe(23000)
+        ->outputTokens->toBe(1000);
+});
+
 test('to array', function () {
     $result = CreateResponseUsage::from(messagesCompletion()['usage']);
 
@@ -70,4 +91,11 @@ test('to array with extended usage', function () {
 
     expect($result->toArray())
         ->toBe(messagesCompletionWithExtendedUsage()['usage']);
+});
+
+test('to array with compaction iterations', function () {
+    $result = CreateResponseUsage::from(messagesCompletionWithCompactionUsage()['usage']);
+
+    expect($result->toArray())
+        ->toBe(messagesCompletionWithCompactionUsage()['usage']);
 });

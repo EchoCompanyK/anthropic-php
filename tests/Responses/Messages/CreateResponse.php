@@ -253,6 +253,18 @@ test('to array from code execution response', function () {
         ->toBe(messagesCompletionWithCodeExecution());
 });
 
+test('to array with compaction usage iterations', function () {
+    $completion = CreateResponse::from(messagesCompletionWithCompactionUsage(), meta());
+
+    expect($completion->usage->iterations)
+        ->toBeArray()
+        ->toHaveCount(2);
+
+    expect($completion->toArray())
+        ->toBeArray()
+        ->toBe(messagesCompletionWithCompactionUsage());
+});
+
 test('fake', function () {
     $response = CreateResponse::fake();
 

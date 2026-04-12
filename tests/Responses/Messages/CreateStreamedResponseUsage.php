@@ -1,6 +1,7 @@
 <?php
 
 use Anthropic\Responses\Messages\CreateResponseUsageCacheCreation;
+use Anthropic\Responses\Messages\CreateResponseUsageIteration;
 use Anthropic\Responses\Messages\CreateResponseUsageServerToolUse;
 use Anthropic\Responses\Messages\CreateStreamedResponseUsage;
 
@@ -85,6 +86,20 @@ test('from first chunk with extended usage', function () {
         ->serverToolUse->webSearchRequests->toBe(3);
 });
 
+test('from first chunk with compaction iterations', function () {
+    $result = CreateStreamedResponseUsage::from(messagesCompletionStreamFirstChunkWithCompactionUsage()['message']['usage']);
+
+    expect($result)
+        ->inputTokens->toBe(23000)
+        ->iterations->toBeArray()->toHaveCount(2)
+        ->iterations->each->toBeInstanceOf(CreateResponseUsageIteration::class);
+
+    expect($result->iterations[0])
+        ->type->toBe('compaction')
+        ->inputTokens->toBe(180000)
+        ->outputTokens->toBe(3500);
+});
+
 test('from last chunk with extended usage', function () {
     $result = CreateStreamedResponseUsage::from(messagesCompletionStreamLastChunkWithExtendedUsage()['usage']);
 
@@ -159,6 +174,13 @@ test('to array from first chunk with extended usage', function () {
 
     expect($result->toArray())
         ->toBe(messagesCompletionStreamFirstChunkWithExtendedUsage()['message']['usage']);
+});
+
+test('to array from first chunk with compaction iterations', function () {
+    $result = CreateStreamedResponseUsage::from(messagesCompletionStreamFirstChunkWithCompactionUsage()['message']['usage']);
+
+    expect($result->toArray())
+        ->toBe(messagesCompletionStreamFirstChunkWithCompactionUsage()['message']['usage']);
 });
 
 test('to array from last chunk with extended usage', function () {

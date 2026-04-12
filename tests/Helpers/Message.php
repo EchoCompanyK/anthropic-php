@@ -145,6 +145,42 @@ function messagesCompletionWithExtendedUsage(): array
     ];
 }
 
+function messagesCompletionWithCompactionUsage(): array
+{
+    return [
+        'id' => 'msg_019hiOHAEXQwq1PTeETNEBWe',
+        'type' => 'message',
+        'role' => 'assistant',
+        'model' => 'claude-sonnet-4-6',
+        'stop_sequence' => null,
+        'usage' => [
+            'input_tokens' => 23000,
+            'output_tokens' => 1000,
+            'cache_creation_input_tokens' => 0,
+            'cache_read_input_tokens' => 0,
+            'iterations' => [
+                [
+                    'type' => 'compaction',
+                    'input_tokens' => 180000,
+                    'output_tokens' => 3500,
+                ],
+                [
+                    'type' => 'message',
+                    'input_tokens' => 23000,
+                    'output_tokens' => 1000,
+                ],
+            ],
+        ],
+        'content' => [
+            [
+                'type' => 'text',
+                'text' => "Hello! I'm Claude, an AI assistant. How can I help you today?",
+            ],
+        ],
+        'stop_reason' => 'end_turn',
+    ];
+}
+
 /**
  * @return array<string, mixed>
  */
@@ -532,6 +568,40 @@ function messagesCompletionStreamFirstChunkWithExtendedUsage(): array
                 'service_tier' => 'standard',
                 'server_tool_use' => [
                     'web_search_requests' => 3,
+                ],
+            ],
+        ],
+    ];
+}
+
+function messagesCompletionStreamFirstChunkWithCompactionUsage(): array
+{
+    return [
+        'type' => 'message_start',
+        'message' => [
+            'id' => 'msg_01YS82gyNJHzAN1xVt2ymmTN',
+            'type' => 'message',
+            'role' => 'assistant',
+            'content' => [],
+            'model' => 'claude-sonnet-4-6',
+            'stop_reason' => null,
+            'stop_sequence' => null,
+            'usage' => [
+                'input_tokens' => 23000,
+                'output_tokens' => 1,
+                'cache_creation_input_tokens' => null,
+                'cache_read_input_tokens' => null,
+                'iterations' => [
+                    [
+                        'type' => 'compaction',
+                        'input_tokens' => 180000,
+                        'output_tokens' => 3500,
+                    ],
+                    [
+                        'type' => 'message',
+                        'input_tokens' => 23000,
+                        'output_tokens' => 1000,
+                    ],
                 ],
             ],
         ],
